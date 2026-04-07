@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pa">
 <head>
@@ -143,28 +144,27 @@
         }
         .live-result:active { opacity: 0.5; }
 
-        /* Keypad section: ਬਲੈਂਕ ਸਪੌਟ ਹਟਾਉਣ ਲਈ ਅੱਪਡੇਟ ਕੀਤਾ ਡਿਜ਼ਾਈਨ */
         .keypad {
             display: flex;
             flex-direction: column;
             padding: 10px 10px 25px 10px;
             gap: 6px;
-            flex: 0 0 55%; /* 55% height ਲਵੇਗਾ */
+            flex: 0 0 55%; 
             background-color: #000;
         }
 
         .row {
             display: flex;
-            flex: 1; /* ਪੂਰੀ ਉਚਾਈ ਲੈਣ ਲਈ */
-            gap: 6px; /* ਬਟਨਾਂ ਵਿਚਕਾਰ ਘੱਟ ਥਾਂ */
+            flex: 1; 
+            gap: 6px; 
             justify-content: space-between;
         }
 
         .btn {
-            flex: 1; /* ਪੂਰੀ ਚੌੜਾਈ ਲੈਣ ਲਈ */
+            flex: 1; 
             width: 100%;
             height: 100%;
-            border-radius: 20px; /* ਨਵਾਂ, ਵੱਡਾ ਟੱਚ ਏਰੀਆ */
+            border-radius: 20px; 
             border: none;
             background: transparent;
             font-size: 32px;
@@ -271,7 +271,6 @@
           });
         }
 
-        // ਕੈਲਕੂਲੇਟਰ ਦਾ ਲੌਜਿਕ
         var calcs = [{ id: 1, expr: '0', hist: '' }];
         var activeId = 1;
         var activeTokenIndex = null;
@@ -584,17 +583,21 @@
                 }
             }
             else {
+                // Number and Decimal logic
                 if (activeTokenIndex !== null) {
                     if (ops.indexOf(tokens[activeTokenIndex]) !== -1) {
                         activeTokenIndex = null;
                         if (ex === '0' && val !== '.') act.expr = val;
+                        else if (val === '.') act.expr += '0.'; 
                         else act.expr += val;
                     } else {
                         if (isOverwriting) {
-                            tokens[activeTokenIndex] = val; 
+                            if (val === '.') tokens[activeTokenIndex] = '0.';
+                            else tokens[activeTokenIndex] = val; 
                             isOverwriting = false; 
                         } else {
                             if (val === '.' && tokens[activeTokenIndex].indexOf('.') !== -1) {
+                                // ਪਹਿਲਾਂ ਹੀ ਬਿੰਦੂ ਹੈ, ਕੁਝ ਨਾ ਕਰੋ (Ignore extra decimal)
                             } else {
                                 if (tokens[activeTokenIndex] === '0' && val !== '.') {
                                     tokens[activeTokenIndex] = val;
@@ -606,8 +609,20 @@
                         act.expr = tokens.join('');
                     }
                 } else {
-                    if (ex === '0' && val !== '.') act.expr = val;
-                    else act.expr += val;
+                    if (val === '.') {
+                        // ਆਖਰੀ ਨੰਬਰ ਜਾਂ ਨਿਸ਼ਾਨ ਚੈੱਕ ਕਰੋ
+                        var lastToken = tokens[tokens.length - 1] || '0';
+                        if (ops.indexOf(lastToken) !== -1) {
+                            // ਜੇਕਰ ਪਿਛੇ ਨਿਸ਼ਾਨ ਹੈ ਤਾਂ '0.' ਲਗਾਓ
+                            act.expr += '0.';
+                        } else if (lastToken.indexOf('.') === -1) {
+                            // ਜੇਕਰ ਪਿਛਲੇ ਨੰਬਰ ਵਿੱਚ ਬਿੰਦੂ ਨਹੀਂ ਹੈ ਤਾਂ ਹੀ ਲਗਾਓ
+                            act.expr += '.';
+                        }
+                    } else {
+                        if (ex === '0' && val !== '.') act.expr = val;
+                        else act.expr += val;
+                    }
                 }
             }
             save();
@@ -616,6 +631,5 @@
     </script>
 </body>
 </html>
-
 
 
