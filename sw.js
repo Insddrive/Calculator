@@ -1,4 +1,4 @@
-const CACHE_NAME = 'punjabi-calc-v4';
+const CACHE_NAME = 'punjabi-calc-v5';
 const urlsToCache = [
   './index.html',
   './manifest.json',
@@ -8,7 +8,6 @@ const urlsToCache = [
 
 // ਇੰਸਟਾਲ ਹੋਣ ਵੇਲੇ ਫਾਈਲਾਂ ਸੇਵ (Cache) ਕਰਨਾ
 self.addEventListener('install', event => {
-  // skipWaiting: ਪੁਰਾਣੇ SW ਦੀ ਉਡੀਕ ਕੀਤੇ ਬਿਨਾਂ ਤੁਰੰਤ ਐਕਟਿਵ ਹੋ ਜਾਓ
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
