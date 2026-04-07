@@ -11,10 +11,10 @@
     <meta name="theme-color" content="#000000">
     <link rel="apple-touch-icon" href="icon-192.png">
 
-    <!-- ਫੁੱਲ ਸਕਰੀਨ ਸੈਟਿੰਗਜ਼ -->
+    <!-- ਫੁੱਲ ਸਕਰੀਨ ਸੈਟਿੰਗਜ਼ (Status bar black) -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     
     <style>
         * {
@@ -144,34 +144,34 @@
         }
         .live-result:active { opacity: 0.5; }
 
+        /* Keypad section: ਬਲੈਂਕ ਸਪੌਟ ਹਟਾਉਣ ਲਈ ਅੱਪਡੇਟ ਕੀਤਾ ਡਿਜ਼ਾਈਨ */
         .keypad {
             display: flex;
             flex-direction: column;
-            padding: 10px 15px 20px 15px;
-            gap: 12px;
-            flex-shrink: 0;
+            padding: 10px 10px 25px 10px;
+            gap: 6px;
+            flex: 0 0 55%; /* 55% height ਲਵੇਗਾ */
             background-color: #000;
         }
 
         .row {
             display: flex;
-            gap: 12px;
+            flex: 1; /* ਪੂਰੀ ਉਚਾਈ ਲੈਣ ਲਈ */
+            gap: 6px; /* ਬਟਨਾਂ ਵਿਚਕਾਰ ਘੱਟ ਥਾਂ */
             justify-content: space-between;
         }
 
         .btn {
-            flex: 1;
-            aspect-ratio: 1 / 1;
-            max-height: 75px;
-            max-width: 75px;
-            border-radius: 50%;
+            flex: 1; /* ਪੂਰੀ ਚੌੜਾਈ ਲੈਣ ਲਈ */
+            width: 100%;
+            height: 100%;
+            border-radius: 20px; /* ਨਵਾਂ, ਵੱਡਾ ਟੱਚ ਏਰੀਆ */
             border: none;
             background: transparent;
             font-size: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
             cursor: pointer;
         }
 
@@ -185,7 +185,8 @@
 
         .action-btn {
             flex: 1;
-            max-width: 75px;
+            width: 100%;
+            height: 100%;
             background: transparent;
             border: none;
             color: #888;
@@ -193,14 +194,16 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            border-radius: 20px;
         }
-        .action-btn:active { background: rgba(255,255,255,0.1); border-radius: 50%;}
+        .action-btn:active { background: rgba(255,255,255,0.1); }
         .delete-tab { color: #F07041; }
 
         @media (max-height: 700px) {
-            .btn { max-height: 60px; max-width: 60px; font-size: 26px; }
+            .btn { font-size: 26px; border-radius: 16px; }
             .btn-op { font-size: 32px; }
-            .keypad { gap: 8px; padding-bottom: 10px; }
+            .keypad { gap: 4px; padding-bottom: 15px; }
+            .row { gap: 4px; }
         }
     </style>
 </head>
@@ -268,21 +271,6 @@
             });
           });
         }
-
-        // ਫੁੱਲ ਸਕਰੀਨ ਮੋਡ - Android navigation bar ਲੁਕਾਓ
-        function requestFullscreen() {
-          if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen().catch(() => {});
-          } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen();
-          }
-        }
-        // ਟੱਚ ਕਰਨ ਤੇ fullscreen ਚਾਲੂ ਕਰੋ (Android ਲਈ ਜ਼ਰੂਰੀ)
-        document.addEventListener('click', function() {
-          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-            requestFullscreen();
-          }
-        }, { once: true });
 
         // ਕੈਲਕੂਲੇਟਰ ਦਾ ਲੌਜਿਕ
         var calcs = [{ id: 1, expr: '0', hist: '' }];
@@ -629,3 +617,6 @@
     </script>
 </body>
 </html>
+
+
+
