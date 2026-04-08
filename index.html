@@ -23,6 +23,9 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
+            /* ਫੋਨ 'ਤੇ ਟੈਕਸਟ ਕਾਪੀ/ਸਲੈਕਟ ਹੋਣ ਤੋਂ ਰੋਕਣ ਲਈ */
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -108,9 +111,9 @@
             min-height: 22px;
             margin-bottom: 5px;
             word-break: break-all;
-            cursor: pointer;
+            cursor: pointer; /* ਕਲਿੱਕ ਕਰਨ ਦਾ ਅਹਿਸਾਸ */
         }
-        .history:active { color: #fff; }
+        .history:active { color: #fff; } /* ਟੱਚ ਕਰਨ 'ਤੇ ਚਮਕੇਗੀ */
 
         .main-input {
             text-align: right;
@@ -121,15 +124,17 @@
         }
 
         .num-token, .op-token {
-            cursor: pointer;
-            border-radius: 8px; /* ਥੋੜ੍ਹਾ ਵਧੀਆ ਡਿਜ਼ਾਈਨ */
+            border-radius: 8px;
             padding: 0 4px;
+        }
+        .num-token.clickable, .op-token.clickable {
+            cursor: pointer;
         }
         .num-token { color: #fff; }
         .op-token { color: #F07041; font-weight: 500; }
         
         .num-token.selected, .op-token.selected {
-            background-color: rgba(98, 174, 239, 0.4); /* ਸਲੈਕਸ਼ਨ ਲਈ ਨੀਲਾ ਰੰਗ */
+            background-color: rgba(98, 174, 239, 0.35); /* ਸਲੈਕਸ਼ਨ ਲਈ ਨੀਲਾ ਰੰਗ */
             color: #fff;
         }
 
@@ -172,6 +177,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: opacity 0.2s;
         }
 
         .btn:active { background: rgba(255,255,255,0.1); }
@@ -179,6 +185,12 @@
         .btn-op { color: #F07041; font-size: 38px; }
         .btn-ac { font-size: 24px; color: #F07041; }
         
+        /* ਡਿਸਏਬਲ (ਮੱਧਮ) ਕਰਨ ਲਈ ਕਲਾਸ */
+        .btn.disabled {
+            opacity: 0.25;
+            pointer-events: none; /* ਟੱਚ ਕੰਮ ਨਹੀਂ ਕਰੇਗਾ */
+        }
+
         .btn-eq { background: #F07041; color: #fff; transition: background 0.2s; }
         .btn-eq:active { filter: brightness(0.8); }
 
@@ -214,6 +226,7 @@
     </div>
 
     <div class="display" id="displayArea">
+        <!-- ਹਿਸਟਰੀ 'ਤੇ ਕਲਿੱਕ ਕਰਨ ਦੀ ਸੁਵਿਧਾ -->
         <div class="history" id="histBox" onclick="window.restoreHistory()"></div>
         <div class="main-input" id="inpBox"></div>
         <div class="live-result" id="liveBox" onclick="window.press('=')"></div>
@@ -225,26 +238,26 @@
             <button class="btn btn-op" onclick="window.press('BACK')">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>
             </button>
-            <button class="btn btn-op" style="font-size: 26px;" onclick="window.press('%')">%</button>
-            <button class="btn btn-op" onclick="window.press('/')">÷</button>
+            <button class="btn btn-op c-op" style="font-size: 26px;" onclick="window.press('%')">%</button>
+            <button class="btn btn-op c-op" onclick="window.press('/')">÷</button>
         </div>
         <div class="row">
-            <button class="btn btn-num" onclick="window.press('7')">7</button>
-            <button class="btn btn-num" onclick="window.press('8')">8</button>
-            <button class="btn btn-num" onclick="window.press('9')">9</button>
-            <button class="btn btn-op" onclick="window.press('*')">×</button>
+            <button class="btn btn-num c-num" onclick="window.press('7')">7</button>
+            <button class="btn btn-num c-num" onclick="window.press('8')">8</button>
+            <button class="btn btn-num c-num" onclick="window.press('9')">9</button>
+            <button class="btn btn-op c-op" onclick="window.press('*')">×</button>
         </div>
         <div class="row">
-            <button class="btn btn-num" onclick="window.press('4')">4</button>
-            <button class="btn btn-num" onclick="window.press('5')">5</button>
-            <button class="btn btn-num" onclick="window.press('6')">6</button>
-            <button class="btn btn-op" style="font-size: 46px; padding-bottom: 6px;" onclick="window.press('-')">-</button>
+            <button class="btn btn-num c-num" onclick="window.press('4')">4</button>
+            <button class="btn btn-num c-num" onclick="window.press('5')">5</button>
+            <button class="btn btn-num c-num" onclick="window.press('6')">6</button>
+            <button class="btn btn-op c-op" style="font-size: 46px; padding-bottom: 6px;" onclick="window.press('-')">-</button>
         </div>
         <div class="row">
-            <button class="btn btn-num" onclick="window.press('1')">1</button>
-            <button class="btn btn-num" onclick="window.press('2')">2</button>
-            <button class="btn btn-num" onclick="window.press('3')">3</button>
-            <button class="btn btn-op" style="font-size: 40px;" onclick="window.press('+')">+</button>
+            <button class="btn btn-num c-num" onclick="window.press('1')">1</button>
+            <button class="btn btn-num c-num" onclick="window.press('2')">2</button>
+            <button class="btn btn-num c-num" onclick="window.press('3')">3</button>
+            <button class="btn btn-op c-op" style="font-size: 40px;" onclick="window.press('+')">+</button>
         </div>
         <div class="row">
             <button class="action-btn" onclick="window.masterReset()">
@@ -253,25 +266,25 @@
             <button class="action-btn delete-tab" onclick="window.delTab()">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </button>
-            <button class="btn btn-num" onclick="window.press('0')">0</button>
-            <button class="btn btn-num" style="font-size: 36px; padding-bottom:10px;" onclick="window.press('.')">.</button>
+            <button class="btn btn-num c-num" onclick="window.press('0')">0</button>
+            <button class="btn btn-num c-num" style="font-size: 36px; padding-bottom:10px;" onclick="window.press('.')">.</button>
             <button class="btn btn-eq" id="eqBtn" onclick="window.press('=')">=</button>
         </div>
     </div>
 
     <script>
-        // ਸਰਵਿਸ ਵਰਕਰ ਨੂੰ ਰਜਿਸਟਰ ਕਰਨਾ
+        // ਸਰਵਿਸ ਵਰਕਰ
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', function() {
             navigator.serviceWorker.register('sw.js').then(function(registration) {
-              console.log('ServiceWorker registration successful');
-            }, function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-            });
+              console.log('SW registered');
+            }).catch(function(err){});
           });
         }
 
-        var calcs = [{ id: 1, expr: '0', hist: '' }];
+        // ਡਾਟਾ ਸਟੋਰੇਜ
+        // isResultState: ਇਹ ਦੱਸੇਗਾ ਕਿ ਸਕਰੀਨ 'ਤੇ ਜਵਾਬ ਹੈ ਜਾਂ ਨਹੀਂ
+        var calcs = [{ id: 1, expr: '0', hist: '', isResultState: false }];
         var activeId = 1;
         var activeTokenIndex = null;
         var isOverwriting = false;
@@ -287,15 +300,23 @@
             try {
                 var sData = localStorage.getItem('calcDataVFinal');
                 var sId = localStorage.getItem('calcIdVFinal');
-                if(sData) calcs = JSON.parse(sData);
+                if(sData) {
+                    calcs = JSON.parse(sData);
+                    // ਪੁਰਾਣੇ ਵਰਜਨ ਦੇ ਡਾਟਾ ਵਿੱਚ isResultState ਜੋੜਨ ਲਈ
+                    for(var i=0; i<calcs.length; i++) {
+                        if (calcs[i].isResultState === undefined) {
+                            calcs[i].isResultState = false;
+                        }
+                    }
+                }
                 if(sId) activeId = parseInt(sId);
                 
-                if(!calcs || calcs.length === 0) calcs = [{ id: 1, expr: '0', hist: '' }];
+                if(!calcs || calcs.length === 0) calcs = [{ id: 1, expr: '0', hist: '', isResultState: false }];
                 var found = false;
                 for(var i=0; i<calcs.length; i++) if(calcs[i].id === activeId) found = true;
                 if(!found) activeId = calcs[0].id;
             } catch(e) {
-                calcs = [{ id: 1, expr: '0', hist: '' }];
+                calcs = [{ id: 1, expr: '0', hist: '', isResultState: false }];
                 activeId = 1;
             }
 
@@ -338,6 +359,7 @@
             return parts.join(".");
         }
 
+        // ਹਿਸਟਰੀ ਨੂੰ ਵਾਪਸ ਲਿਆਉਣ ਦਾ ਲੌਜਿਕ
         window.restoreHistory = function() {
             var act = null;
             for(var i=0; i<calcs.length; i++) {
@@ -353,6 +375,7 @@
 
             act.expr = histStr.replace(/,/g, ''); 
             act.hist = '';
+            act.isResultState = false; // ਹਿਸਟਰੀ ਵਾਪਸ ਲਿਆਉਣ 'ਤੇ ਇਸਨੂੰ ਐਡਿਟੇਬਲ ਬਣਾਓ
             activeTokenIndex = null;
             save();
         };
@@ -392,22 +415,24 @@
                     span.className = 'op-token';
                 }
 
+                if (tokens.length > 1) {
+                    span.className += ' clickable';
+                    span.onclick = (function(idx) {
+                        return function(e) {
+                            e.stopPropagation(); 
+                            activeTokenIndex = idx;
+                            isOverwriting = true; 
+                            updateUI();
+                        };
+                    })(j);
+                }
+
                 if (j === activeTokenIndex) {
                     span.className += ' selected';
                 }
 
                 span.innerText = displayVal;
                 displayStrLength += displayVal.length;
-                
-                span.onclick = (function(idx) {
-                    return function(e) {
-                        e.stopPropagation(); 
-                        activeTokenIndex = idx;
-                        isOverwriting = true; 
-                        updateUI();
-                    };
-                })(j);
-                
                 inpBox.appendChild(span);
             }
 
@@ -450,16 +475,32 @@
                 }
             } catch(e) { liveBox.innerText = ""; }
             
-            // ਨਵੇਂ ਡਿਜ਼ਾਈਨ ਮੁਤਾਬਕ "ਟਿੱਕ ਮਾਰਕ" ਅਤੇ ਰੰਗ ਬਦਲਣ ਦਾ ਲੌਜਿਕ
+            // ਨੰਬਰ/ਨਿਸ਼ਾਨ ਡਿਸਏਬਲ (ਮੱਧਮ) ਕਰਨ ਦਾ ਲੌਜਿਕ
+            var numBtns = document.querySelectorAll('.c-num');
+            var opBtns = document.querySelectorAll('.c-op');
+            
+            numBtns.forEach(function(b) { b.classList.remove('disabled'); });
+            opBtns.forEach(function(b) { b.classList.remove('disabled'); });
+
+            if (activeTokenIndex !== null) {
+                var activeToken = tokens[activeTokenIndex];
+                var isOpToken = ['+', '-', '*', '/'].indexOf(activeToken) !== -1;
+                
+                if (isOpToken) {
+                    numBtns.forEach(function(b) { b.classList.add('disabled'); });
+                } else {
+                    opBtns.forEach(function(b) { b.classList.add('disabled'); });
+                }
+            }
+
+            // ਟਿੱਕ ਮਾਰਕ ਬਟਨ
             var eqBtn = document.getElementById('eqBtn');
             if (eqBtn) {
                 if (activeTokenIndex !== null) {
-                    // ਨੀਲਾ ਟਿੱਕ ਨਿਸ਼ਾਨ
                     eqBtn.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
                     eqBtn.style.backgroundColor = '#62AEEF'; 
                     eqBtn.style.color = '#fff';
                 } else {
-                    // ਸੰਤਰੀ ਬਰਾਬਰ ਦਾ ਨਿਸ਼ਾਨ
                     eqBtn.innerHTML = '=';
                     eqBtn.style.backgroundColor = '#F07041';
                     eqBtn.style.color = '#fff';
@@ -473,7 +514,7 @@
         window.addCalc = function() {
             var max = 0;
             for(var i=0; i<calcs.length; i++) { if(calcs[i].id > max) max = calcs[i].id; }
-            calcs.push({ id: max + 1, expr: '0', hist: '' });
+            calcs.push({ id: max + 1, expr: '0', hist: '', isResultState: false });
             activeId = max + 1;
             activeTokenIndex = null;
             save();
@@ -481,7 +522,7 @@
 
         window.masterReset = function() {
             if(confirm("ਕੀ ਤੁਸੀਂ ਸਭ ਕੁਝ ਡਿਲੀਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?")) {
-                calcs = [{ id: 1, expr: '0', hist: '' }];
+                calcs = [{ id: 1, expr: '0', hist: '', isResultState: false }];
                 activeId = 1;
                 activeTokenIndex = null;
                 save();
@@ -517,6 +558,7 @@
             if (val === 'AC') {
                 act.expr = '0';
                 act.hist = '';
+                act.isResultState = false;
                 activeTokenIndex = null;
             } 
             else if (val === 'BACK') {
@@ -533,9 +575,9 @@
                 } else {
                     act.expr = ex.length > 1 ? ex.slice(0, -1) : '0';
                 }
+                act.isResultState = false;
             }
             else if (val === '=') {
-                // ਜੇਕਰ ਕੋਈ ਨੰਬਰ/ਨਿਸ਼ਾਨ ਸਲੈਕਟ ਹੈ, ਤਾਂ ਟਿੱਕ ਮਾਰਕ ਦਾ ਕੰਮ ਕਰੋ (ਸਿਰਫ਼ ਸਲੈਕਸ਼ਨ ਹਟਾਓ)
                 if (activeTokenIndex !== null) {
                     activeTokenIndex = null;
                     isOverwriting = false;
@@ -543,7 +585,6 @@
                     return;
                 }
 
-                // ਜੇਕਰ ਸਮੀਕਰਨ ਵਿੱਚ ਕੋਈ ਨਿਸ਼ਾਨ (+, -, *, /) ਨਹੀਂ ਹੈ, ਤਾਂ ਕੁਝ ਨਾ ਕਰੋ
                 if (!/[+\-*/]/.test(ex)) {
                     return;
                 }
@@ -567,9 +608,11 @@
                         }
                         act.hist = formattedEx + " =";
                         act.expr = String(Math.round(res * 100000000)/100000000);
+                        act.isResultState = true; // ਇਹ ਫਲੈਗ ਦੱਸਦਾ ਹੈ ਕਿ ਹੁਣ ਸਕਰੀਨ 'ਤੇ ਜਵਾਬ ਹੈ
                     }
                 } catch(e) {
                     act.expr = 'Error';
+                    act.isResultState = false;
                     setTimeout(function(){ act.expr = ex; save(); }, 1000);
                 }
             }
@@ -595,8 +638,10 @@
                     act.expr = tokens.join('');
                     activeTokenIndex = null;
                 }
+                act.isResultState = false;
             }
             else if (ops.indexOf(val) !== -1) {
+                // ਜੇਕਰ ਕੋਈ ਨਿਸ਼ਾਨ ਦਬਾਇਆ ਗਿਆ ਹੈ
                 if (activeTokenIndex !== null && ops.indexOf(tokens[activeTokenIndex]) !== -1) {
                     tokens[activeTokenIndex] = val;
                     act.expr = tokens.join('');
@@ -610,8 +655,11 @@
                         act.expr += val;
                     }
                 }
+                // ਨਿਸ਼ਾਨ ਦਬਾਉਣ 'ਤੇ ਜਵਾਬ ਵਾਲੀ ਸਟੇਟ ਖਤਮ ਹੋ ਜਾਂਦੀ ਹੈ (ਭਾਵ ਹੁਣ ਹੋਰ ਕੈਲਕੂਲੇਸ਼ਨ ਹੋਵੇਗੀ)
+                act.isResultState = false;
             }
             else {
+                // ਜੇਕਰ ਕੋਈ ਨੰਬਰ (ਜਾਂ ਬਿੰਦੂ) ਦਬਾਇਆ ਗਿਆ ਹੈ
                 if (activeTokenIndex !== null) {
                     if (ops.indexOf(tokens[activeTokenIndex]) !== -1) {
                         activeTokenIndex = null;
@@ -635,17 +683,31 @@
                         }
                         act.expr = tokens.join('');
                     }
+                    act.isResultState = false;
                 } else {
-                    if (val === '.') {
-                        var lastToken = tokens[tokens.length - 1] || '0';
-                        if (ops.indexOf(lastToken) !== -1) {
-                            act.expr += '0.';
-                        } else if (lastToken.indexOf('.') === -1) {
-                            act.expr += '.';
+                    // ਨਵਾਂ ਲੌਜਿਕ: ਜੇਕਰ ਸਕਰੀਨ 'ਤੇ ਜਵਾਬ ਹੈ ਅਤੇ ਅਸੀਂ ਨਵਾਂ ਨੰਬਰ ਦਬਾਇਆ ਹੈ
+                    if (act.isResultState) {
+                        if (val === '.') {
+                            act.expr = '0.';
+                        } else {
+                            act.expr = val; // ਪੁਰਾਣਾ ਜਵਾਬ ਮਿਟਾ ਕੇ ਨਵਾਂ ਨੰਬਰ ਲਿਖੋ
                         }
-                    } else {
-                        if (ex === '0' && val !== '.') act.expr = val;
-                        else act.expr += val;
+                        act.hist = ''; // ਹਿਸਟਰੀ ਵੀ ਮਿਟਾ ਦਿਓ (ਨਵੀਂ ਕੈਲਕੂਲੇਸ਼ਨ ਸ਼ੁਰੂ)
+                        act.isResultState = false;
+                    } 
+                    else {
+                        // ਆਮ ਹਾਲਤ: ਨੰਬਰ ਪਿੱਛੇ ਜੋੜਦੇ ਜਾਓ
+                        if (val === '.') {
+                            var lastToken = tokens[tokens.length - 1] || '0';
+                            if (ops.indexOf(lastToken) !== -1) {
+                                act.expr += '0.';
+                            } else if (lastToken.indexOf('.') === -1) {
+                                act.expr += '.';
+                            }
+                        } else {
+                            if (ex === '0' && val !== '.') act.expr = val;
+                            else act.expr += val;
+                        }
                     }
                 }
             }
