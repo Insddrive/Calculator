@@ -1,4 +1,4 @@
-const CACHE_NAME = 'punjabi-calc-v5';
+const CACHE_NAME = 'punjabi-calc-v6';
 const urlsToCache = [
   './index.html',
   './manifest.json',
@@ -6,7 +6,6 @@ const urlsToCache = [
   './icon-512.png'
 ];
 
-// ਇੰਸਟਾਲ ਹੋਣ ਵੇਲੇ ਫਾਈਲਾਂ ਸੇਵ (Cache) ਕਰਨਾ
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
@@ -17,7 +16,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// ਆਫਲਾਈਨ ਚੱਲਣ ਲਈ ਫਾਈਲਾਂ ਨੂੰ Cache ਵਿੱਚੋਂ ਦੇਣਾ
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -30,7 +28,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// ਪੁਰਾਣੀ ਕੈਸ਼ ਡਿਲੀਟ ਕਰਨਾ ਅਤੇ ਤੁਰੰਤ ਕੰਟਰੋਲ ਲੈਣਾ
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -43,7 +40,6 @@ self.addEventListener('activate', event => {
         })
       );
     }).then(() => {
-      // ਸਾਰੇ ਖੁੱਲੇ ਟੈਬਾਂ ਉੱਤੇ ਤੁਰੰਤ ਕੰਟਰੋਲ ਲਓ
       return self.clients.claim();
     })
   );
