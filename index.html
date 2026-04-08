@@ -122,14 +122,14 @@
 
         .num-token, .op-token {
             cursor: pointer;
-            border-radius: 6px;
-            padding: 0 2px;
+            border-radius: 8px; /* ਥੋੜ੍ਹਾ ਵਧੀਆ ਡਿਜ਼ਾਈਨ */
+            padding: 0 4px;
         }
         .num-token { color: #fff; }
         .op-token { color: #F07041; font-weight: 500; }
         
         .num-token.selected, .op-token.selected {
-            background-color: rgba(240, 112, 65, 0.5);
+            background-color: rgba(98, 174, 239, 0.4); /* ਸਲੈਕਸ਼ਨ ਲਈ ਨੀਲਾ ਰੰਗ */
             color: #fff;
         }
 
@@ -179,8 +179,8 @@
         .btn-op { color: #F07041; font-size: 38px; }
         .btn-ac { font-size: 24px; color: #F07041; }
         
-        .btn-eq { background: #F07041; color: #fff; }
-        .btn-eq:active { background: #d96336; }
+        .btn-eq { background: #F07041; color: #fff; transition: background 0.2s; }
+        .btn-eq:active { filter: brightness(0.8); }
 
         .action-btn {
             flex: 1;
@@ -255,12 +255,12 @@
             </button>
             <button class="btn btn-num" onclick="window.press('0')">0</button>
             <button class="btn btn-num" style="font-size: 36px; padding-bottom:10px;" onclick="window.press('.')">.</button>
-            <button class="btn btn-eq" onclick="window.press('=')">=</button>
+            <button class="btn btn-eq" id="eqBtn" onclick="window.press('=')">=</button>
         </div>
     </div>
 
     <script>
-        // ਸਰਵਿਸ ਵਰਕਰ ਨੂੰ ਰਜਿਸਟਰ ਕਰਨਾ ਤਾਂ ਜੋ ਐਪ ਇੰਸਟਾਲ ਹੋ ਸਕੇ
+        // ਸਰਵਿਸ ਵਰਕਰ ਨੂੰ ਰਜਿਸਟਰ ਕਰਨਾ
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', function() {
             navigator.serviceWorker.register('sw.js').then(function(registration) {
@@ -450,6 +450,22 @@
                 }
             } catch(e) { liveBox.innerText = ""; }
             
+            // ਨਵੇਂ ਡਿਜ਼ਾਈਨ ਮੁਤਾਬਕ "ਟਿੱਕ ਮਾਰਕ" ਅਤੇ ਰੰਗ ਬਦਲਣ ਦਾ ਲੌਜਿਕ
+            var eqBtn = document.getElementById('eqBtn');
+            if (eqBtn) {
+                if (activeTokenIndex !== null) {
+                    // ਨੀਲਾ ਟਿੱਕ ਨਿਸ਼ਾਨ
+                    eqBtn.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    eqBtn.style.backgroundColor = '#62AEEF'; 
+                    eqBtn.style.color = '#fff';
+                } else {
+                    // ਸੰਤਰੀ ਬਰਾਬਰ ਦਾ ਨਿਸ਼ਾਨ
+                    eqBtn.innerHTML = '=';
+                    eqBtn.style.backgroundColor = '#F07041';
+                    eqBtn.style.color = '#fff';
+                }
+            }
+
             var displayDiv = document.getElementById('displayArea');
             displayDiv.scrollTop = displayDiv.scrollHeight;
         }
@@ -519,6 +535,19 @@
                 }
             }
             else if (val === '=') {
+                // ਜੇਕਰ ਕੋਈ ਨੰਬਰ/ਨਿਸ਼ਾਨ ਸਲੈਕਟ ਹੈ, ਤਾਂ ਟਿੱਕ ਮਾਰਕ ਦਾ ਕੰਮ ਕਰੋ (ਸਿਰਫ਼ ਸਲੈਕਸ਼ਨ ਹਟਾਓ)
+                if (activeTokenIndex !== null) {
+                    activeTokenIndex = null;
+                    isOverwriting = false;
+                    save();
+                    return;
+                }
+
+                // ਜੇਕਰ ਸਮੀਕਰਨ ਵਿੱਚ ਕੋਈ ਨਿਸ਼ਾਨ (+, -, *, /) ਨਹੀਂ ਹੈ, ਤਾਂ ਕੁਝ ਨਾ ਕਰੋ
+                if (!/[+\-*/]/.test(ex)) {
+                    return;
+                }
+
                 activeTokenIndex = null; 
                 try {
                     while(ex.length > 0 && /[+\-*/.]$/.test(ex)) {
@@ -583,7 +612,6 @@
                 }
             }
             else {
-                // Number and Decimal logic
                 if (activeTokenIndex !== null) {
                     if (ops.indexOf(tokens[activeTokenIndex]) !== -1) {
                         activeTokenIndex = null;
@@ -597,7 +625,6 @@
                             isOverwriting = false; 
                         } else {
                             if (val === '.' && tokens[activeTokenIndex].indexOf('.') !== -1) {
-                                // ਪਹਿਲਾਂ ਹੀ ਬਿੰਦੂ ਹੈ, ਕੁਝ ਨਾ ਕਰੋ (Ignore extra decimal)
                             } else {
                                 if (tokens[activeTokenIndex] === '0' && val !== '.') {
                                     tokens[activeTokenIndex] = val;
@@ -610,13 +637,10 @@
                     }
                 } else {
                     if (val === '.') {
-                        // ਆਖਰੀ ਨੰਬਰ ਜਾਂ ਨਿਸ਼ਾਨ ਚੈੱਕ ਕਰੋ
                         var lastToken = tokens[tokens.length - 1] || '0';
                         if (ops.indexOf(lastToken) !== -1) {
-                            // ਜੇਕਰ ਪਿਛੇ ਨਿਸ਼ਾਨ ਹੈ ਤਾਂ '0.' ਲਗਾਓ
                             act.expr += '0.';
                         } else if (lastToken.indexOf('.') === -1) {
-                            // ਜੇਕਰ ਪਿਛਲੇ ਨੰਬਰ ਵਿੱਚ ਬਿੰਦੂ ਨਹੀਂ ਹੈ ਤਾਂ ਹੀ ਲਗਾਓ
                             act.expr += '.';
                         }
                     } else {
