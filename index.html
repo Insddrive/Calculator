@@ -179,7 +179,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: none;          /* ਜ਼ੀਰੋ delay - ਤੁਰੰਤ ਰਿਸਪੌਂਸ */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; /* ਡਬਲ-ਟੈਪ zoom ਬੰਦ, delay ਹਟਾਉ */
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .btn:active { background: rgba(255,255,255,0.1); }
@@ -190,10 +194,10 @@
         /* ਡਿਸਏਬਲ (ਮੱਧਮ) ਕਰਨ ਲਈ ਕਲਾਸ */
         .btn.disabled {
             opacity: 0.25;
-            pointer-events: none; /* ਟੱਚ ਕੰਮ ਨਹੀਂ ਕਰੇਗਾ */
+            pointer-events: none;
         }
 
-        .btn-eq { background: #F07041; color: #fff; transition: background 0.2s; }
+        .btn-eq { background: #F07041; color: #fff; transition: none; }
         .btn-eq:active { filter: brightness(0.8); }
 
         .action-btn {
@@ -208,6 +212,8 @@
             justify-content: center;
             cursor: pointer;
             border-radius: 20px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         .action-btn:active { background: rgba(255,255,255,0.1); }
         .delete-tab { color: #F07041; }
@@ -234,43 +240,43 @@
         <div class="live-result" id="liveBox" onclick="window.press('=')"></div>
     </div>
 
-    <div class="keypad">
+    <div class="keypad" id="keypadArea">
         <div class="row">
-            <button class="btn btn-ac" onclick="window.press('AC')">C</button>
-            <button class="btn btn-op" onclick="window.press('BACK')">
+            <button class="btn btn-ac"    data-val="AC">C</button>
+            <button class="btn btn-op"    data-val="BACK">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>
             </button>
-            <button class="btn btn-op c-op" style="font-size: 26px;" onclick="window.press('%')">%</button>
-            <button class="btn btn-op c-op" onclick="window.press('/')">÷</button>
+            <button class="btn btn-op c-op" style="font-size: 26px;" data-val="%">%</button>
+            <button class="btn btn-op c-op" data-val="/">÷</button>
         </div>
         <div class="row">
-            <button class="btn btn-num c-num" onclick="window.press('7')">7</button>
-            <button class="btn btn-num c-num" onclick="window.press('8')">8</button>
-            <button class="btn btn-num c-num" onclick="window.press('9')">9</button>
-            <button class="btn btn-op c-op" onclick="window.press('*')">×</button>
+            <button class="btn btn-num c-num" data-val="7">7</button>
+            <button class="btn btn-num c-num" data-val="8">8</button>
+            <button class="btn btn-num c-num" data-val="9">9</button>
+            <button class="btn btn-op c-op"   data-val="*">×</button>
         </div>
         <div class="row">
-            <button class="btn btn-num c-num" onclick="window.press('4')">4</button>
-            <button class="btn btn-num c-num" onclick="window.press('5')">5</button>
-            <button class="btn btn-num c-num" onclick="window.press('6')">6</button>
-            <button class="btn btn-op c-op" style="font-size: 46px; padding-bottom: 6px;" onclick="window.press('-')">-</button>
+            <button class="btn btn-num c-num" data-val="4">4</button>
+            <button class="btn btn-num c-num" data-val="5">5</button>
+            <button class="btn btn-num c-num" data-val="6">6</button>
+            <button class="btn btn-op c-op"   style="font-size: 46px; padding-bottom: 6px;" data-val="-">-</button>
         </div>
         <div class="row">
-            <button class="btn btn-num c-num" onclick="window.press('1')">1</button>
-            <button class="btn btn-num c-num" onclick="window.press('2')">2</button>
-            <button class="btn btn-num c-num" onclick="window.press('3')">3</button>
-            <button class="btn btn-op c-op" style="font-size: 40px;" onclick="window.press('+')">+</button>
+            <button class="btn btn-num c-num" data-val="1">1</button>
+            <button class="btn btn-num c-num" data-val="2">2</button>
+            <button class="btn btn-num c-num" data-val="3">3</button>
+            <button class="btn btn-op c-op"   style="font-size: 40px;" data-val="+">+</button>
         </div>
         <div class="row">
-            <button class="action-btn" onclick="window.masterReset()">
+            <button class="action-btn"        data-action="reset">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
             </button>
-            <button class="action-btn delete-tab" onclick="window.delTab()">
+            <button class="action-btn delete-tab" data-action="deltab">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </button>
-            <button class="btn btn-num c-num" onclick="window.press('0')">0</button>
-            <button class="btn btn-num c-num" style="font-size: 36px; padding-bottom:10px;" onclick="window.press('.')">.</button>
-            <button class="btn btn-eq" id="eqBtn" onclick="window.press('=')">=</button>
+            <button class="btn btn-num c-num"  data-val="0">0</button>
+            <button class="btn btn-num c-num"  style="font-size: 36px; padding-bottom:10px;" data-val=".">.</button>
+            <button class="btn btn-eq" id="eqBtn" data-val="=">=</button>
         </div>
     </div>
 
@@ -299,11 +305,95 @@
             liveBox = document.getElementById('liveBox');
             tabsBox = document.getElementById('tabsBox');
 
+            // ===== ਤੁਰੰਤ ਟੱਚ ਸਿਸਟਮ =====
+            // touchstart ਵਰਤਦੇ ਹਾਂ - onclick ਤੋਂ 300ms ਤੇਜ਼
+            // ਪੂਰੇ keypad ਤੇ ਇੱਕ listener - blank spot ਵੀ ਢੱਕਦਾ ਹੈ
+            var keypad = document.getElementById('keypadArea');
+            var pressedBtn = null; // long press ਰੋਕਣ ਲਈ ਟਰੈਕ
+
+            keypad.addEventListener('touchstart', function(e) {
+                e.preventDefault(); // ਡਬਲ-ਟੈਪ zoom ਅਤੇ scroll ਰੋਕੋ
+                var touch = e.changedTouches[0];
+                var el = document.elementFromPoint(touch.clientX, touch.clientY);
+                // ਨਜ਼ਦੀਕੀ ਬਟਨ ਲੱਭੋ (ਭਾਵੇਂ SVG ਜਾਂ span ਤੇ ਲੱਗੇ)
+                var btn = el ? el.closest('[data-val],[data-action]') : null;
+                if (!btn) {
+                    // ਖਾਲੀ ਜਗ੍ਹਾ ਲੱਗੀ - ਸਭ ਤੋਂ ਨੇੜੇ ਵਾਲਾ ਬਟਨ ਲੱਭੋ
+                    btn = findNearestBtn(touch.clientX, touch.clientY, keypad);
+                }
+                if (btn) {
+                    pressedBtn = btn;
+                    triggerBtn(btn);
+                    // ਵਿਜ਼ੂਅਲ ਫੀਡਬੈਕ
+                    btn.style.background = 'rgba(255,255,255,0.1)';
+                }
+            }, { passive: false });
+
+            keypad.addEventListener('touchend', function(e) {
+                if (pressedBtn) {
+                    pressedBtn.style.background = '';
+                    pressedBtn = null;
+                }
+            }, { passive: true });
+
+            keypad.addEventListener('touchcancel', function(e) {
+                if (pressedBtn) {
+                    pressedBtn.style.background = '';
+                    pressedBtn = null;
+                }
+            }, { passive: true });
+
+            // ਸਭ ਤੋਂ ਨੇੜੇ ਵਾਲਾ ਬਟਨ ਲੱਭਣ ਦਾ ਫੰਕਸ਼ਨ (blank spot ਲਈ)
+            function findNearestBtn(x, y, container) {
+                var btns = container.querySelectorAll('[data-val],[data-action]');
+                var nearest = null;
+                var minDist = Infinity;
+                btns.forEach(function(b) {
+                    var rect = b.getBoundingClientRect();
+                    var cx = rect.left + rect.width / 2;
+                    var cy = rect.top + rect.height / 2;
+                    var dist = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+                    if (dist < minDist) {
+                        minDist = dist;
+                        nearest = b;
+                    }
+                });
+                return nearest;
+            }
+
+            // ਬਟਨ ਦਾ ਕੰਮ ਚਲਾਓ
+            function triggerBtn(btn) {
+                var val = btn.getAttribute('data-val');
+                var action = btn.getAttribute('data-action');
+                if (val !== null) {
+                    window.press(val);
+                } else if (action === 'reset') {
+                    window.masterReset();
+                } else if (action === 'deltab') {
+                    window.delTab();
+                }
+            }
+
+            // liveBox ਤੇ ਟੱਚ
+            document.getElementById('liveBox').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                window.press('=');
+            }, { passive: false });
+
+            // histBox ਤੇ ਟੱਚ
+            document.getElementById('histBox').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                window.restoreHistory();
+            }, { passive: false });
+
             try {
-                var sData = localStorage.getItem('calcDataV10');
-                var sId = localStorage.getItem('calcIdV10');
+                var sData = localStorage.getItem('calcDataV11');
+                var sId = localStorage.getItem('calcIdV11');
                 if (!sData) {
-                    // ਪੁਰਾਣੇ ਵਰਜਨ ਤੋਂ ਡਾਟਾ ਮਾਈਗ੍ਰੇਟ ਕਰੋ
+                    sData = localStorage.getItem('calcDataV10');
+                    sId = localStorage.getItem('calcIdV10');
+                }
+                if (!sData) {
                     sData = localStorage.getItem('calcDataVFinal');
                     sId = localStorage.getItem('calcIdVFinal');
                 }
@@ -340,8 +430,8 @@
 
         function save() {
             try {
-                localStorage.setItem('calcDataV10', JSON.stringify(calcs));
-                localStorage.setItem('calcIdV10', activeId.toString());
+                localStorage.setItem('calcDataV11', JSON.stringify(calcs));
+                localStorage.setItem('calcIdV11', activeId.toString());
             } catch(e) {}
             updateUI();
         }
