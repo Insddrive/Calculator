@@ -1,4 +1,4 @@
-const CACHE_NAME = 'punjabi-calc-v12';
+const CACHE_NAME = 'punjabi-calc-v13';
 const urlsToCache = [
   './index.html',
   './manifest.json',
