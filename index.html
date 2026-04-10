@@ -118,9 +118,10 @@
         .main-input {
             text-align: right;
             width: 100%;
-            word-wrap: break-word;
+            word-break: keep-all;      /* ਟੋਕਨ ਵਿਚਾਲੋਂ ਨਹੀਂ ਟੁੱਟੇਗਾ */
+            overflow-wrap: normal;
             line-height: 1.2;
-            transition: font-size 0.2s ease;
+            transition: none;
         }
 
         .num-token, .op-token {
@@ -387,8 +388,12 @@
             }, { passive: false });
 
             try {
-                var sData = localStorage.getItem('calcDataV11');
-                var sId = localStorage.getItem('calcIdV11');
+                var sData = localStorage.getItem('calcDataV12');
+                var sId = localStorage.getItem('calcIdV12');
+                if (!sData) {
+                    sData = localStorage.getItem('calcDataV11');
+                    sId = localStorage.getItem('calcIdV11');
+                }
                 if (!sData) {
                     sData = localStorage.getItem('calcDataV10');
                     sId = localStorage.getItem('calcIdV10');
@@ -430,8 +435,8 @@
 
         function save() {
             try {
-                localStorage.setItem('calcDataV11', JSON.stringify(calcs));
-                localStorage.setItem('calcIdV11', activeId.toString());
+                localStorage.setItem('calcDataV12', JSON.stringify(calcs));
+                localStorage.setItem('calcIdV12', activeId.toString());
             } catch(e) {}
             updateUI();
         }
@@ -533,10 +538,13 @@
                 inpBox.appendChild(span);
             }
 
-            if (displayStrLength < 10) inpBox.style.fontSize = '55px';
-            else if (displayStrLength < 18) inpBox.style.fontSize = '45px';
-            else if (displayStrLength < 30) inpBox.style.fontSize = '35px';
-            else inpBox.style.fontSize = '26px';
+            // ਫੋਂਟ ਸਾਈਜ਼: 50,000+50,000+50,000+ (24 ਅੱਖਰ) ਇੱਕ ਲਾਈਨ ਵਿੱਚ ਆਉਣੇ ਚਾਹੀਦੇ ਹਨ
+            if (displayStrLength <= 6)       inpBox.style.fontSize = '64px';
+            else if (displayStrLength <= 10) inpBox.style.fontSize = '52px';
+            else if (displayStrLength <= 16) inpBox.style.fontSize = '40px';
+            else if (displayStrLength <= 24) inpBox.style.fontSize = '28px';
+            else if (displayStrLength <= 34) inpBox.style.fontSize = '22px';
+            else                             inpBox.style.fontSize = '18px';
             
             tabsBox.innerHTML = '';
             for(var k=0; k<calcs.length; k++) {
@@ -662,17 +670,9 @@
                 if (activeTokenIndex !== null) {
                     var edited = tokens[activeTokenIndex];
                     if (/[0-9.]/.test(edited)) {
-                        // ਜੇ ਇੱਕ ਤੋਂ ਵੱਧ ਅੰਕ ਹਨ - ਆਖਰੀ ਅੰਕ ਕੱਟੋ
-                        if (edited.length > 1) {
-                            tokens[activeTokenIndex] = edited.slice(0, -1);
-                            // ਜੇ ਬਾਕੀ ਸਿਰਫ਼ ਡੌਟ ਰਿਹਾ ਤਾਂ '0' ਕਰੋ
-                            if (tokens[activeTokenIndex] === '.') {
-                                tokens[activeTokenIndex] = '0';
-                            }
-                        } else {
-                            // ਸਿਰਫ਼ ਇੱਕ ਅੰਕ ਬਚਿਆ - ਡਿਲੀਟ ਨਾ ਕਰੋ, '0' ਕਰੋ
-                            tokens[activeTokenIndex] = '0';
-                        }
+                        // ਸਲੈਕਟਡ ਨੰਬਰ ਨੂੰ ਇੱਕੋ ਵਾਰ ਸਾਰਾ ਕੱਟੋ → '0' ਕਰੋ, ਸਲੈਕਟਡ ਰਹੇ
+                        tokens[activeTokenIndex] = '0';
+                        isOverwriting = true; // ਨਵਾਂ ਨੰਬਰ ਟਾਈਪ ਕਰਨ ਲਈ ਤਿਆਰ
                     } else {
                         // ਆਪਰੇਟਰ ਟੋਕਨ ਸੀ - ਉਸਨੂੰ ਹਟਾਓ
                         tokens.splice(activeTokenIndex, 1);
