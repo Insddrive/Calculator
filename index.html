@@ -99,26 +99,41 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 15px 20px 5px 20px;
-            overflow-y: auto;
+            padding: 10px 20px 5px 20px;
+            overflow: hidden;          /* ਬਾਹਰੀ div ਸਕਰੋਲ ਨਹੀਂ ਕਰੇਗਾ */
+            position: relative;
         }
+
+        /* ਉੱਪਰਲਾ ਹਿੱਸਾ - ਸਿਰਫ਼ history, ਸਕਰੋਲ ਹੋ ਸਕਦੀ ਹੈ */
+        .history-wrap {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .history-wrap::-webkit-scrollbar { display: none; }
 
         .history {
             color: #888;
             text-align: right;
             font-size: 18px;
-            min-height: 22px;
-            margin-bottom: 5px;
             word-break: break-all;
-            cursor: pointer; /* ਕਲਿੱਕ ਕਰਨ ਦਾ ਅਹਿਸਾਸ */
+            line-height: 1.4;
+            padding-bottom: 4px;
         }
-        .history:active { color: #fff; } /* ਟੱਚ ਕਰਨ 'ਤੇ ਚਮਕੇਗੀ */
+        .history:active { color: #fff; }
+
+        /* ਮੁੱਖ ਇਨਪੁਟ ਖੇਤਰ - ਸਕਰੋਲ ਨਹੀਂ ਹੁੰਦਾ, ਹਮੇਸ਼ਾ ਦਿਖਦਾ ਹੈ */
+        .input-result-wrap {
+            flex-shrink: 0;
+            padding-top: 4px;
+        }
 
         .main-input {
             text-align: right;
             width: 100%;
-            word-break: keep-all;      /* ਟੋਕਨ ਵਿਚਾਲੋਂ ਨਹੀਂ ਟੁੱਟੇਗਾ */
+            word-break: keep-all;
             overflow-wrap: normal;
             line-height: 1.2;
             transition: none;
@@ -127,8 +142,8 @@
         .num-token, .op-token {
             border-radius: 8px;
             padding: 0 4px;
-            white-space: nowrap;      /* ਨੰਬਰ ਵਿਚਾਲੋਂ ਨਹੀਂ ਟੁੱਟੇਗਾ */
-            display: inline-block;    /* nowrap ਕੰਮ ਕਰਨ ਲਈ */
+            white-space: nowrap;
+            display: inline-block;
         }
         .num-token.clickable, .op-token.clickable {
             cursor: pointer;
@@ -137,7 +152,7 @@
         .op-token { color: #F07041; font-weight: 500; }
         
         .num-token.selected, .op-token.selected {
-            background-color: rgba(98, 174, 239, 0.35); /* ਸਲੈਕਸ਼ਨ ਲਈ ਨੀਲਾ ਰੰਗ */
+            background-color: rgba(98, 174, 239, 0.35);
             color: #fff;
         }
 
@@ -146,11 +161,18 @@
             text-align: right;
             font-size: 32px;
             min-height: 40px;
-            margin-top: 5px;
+            margin-top: 4px;
             font-weight: 400;
-            cursor: pointer;
+            /* ਸਿਰਫ਼ ਟੈਕਸਟ ਤੇ ਕਲਿੱਕ ਕੰਮ ਕਰੇ, ਖਾਲੀ ਜਗ੍ਹਾ ਤੇ ਨਹੀਂ */
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
-        .live-result:active { opacity: 0.5; }
+        .live-result span {
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .live-result span:active { opacity: 0.5; }
 
         .keypad {
             display: flex;
@@ -235,10 +257,15 @@
     </div>
 
     <div class="display" id="displayArea">
-        <!-- ਹਿਸਟਰੀ 'ਤੇ ਕਲਿੱਕ ਕਰਨ ਦੀ ਸੁਵਿਧਾ -->
-        <div class="history" id="histBox" onclick="window.restoreHistory()"></div>
-        <div class="main-input" id="inpBox"></div>
-        <div class="live-result" id="liveBox" onclick="window.press('=')"></div>
+        <!-- ਹਿਸਟਰੀ - ਸਕਰੋਲ ਹੋ ਸਕਦੀ ਹੈ -->
+        <div class="history-wrap" id="histWrap">
+            <div class="history" id="histBox"></div>
+        </div>
+        <!-- ਮੁੱਖ ਇਨਪੁਟ + ਜਵਾਬ - ਹਮੇਸ਼ਾ ਥੱਲੇ ਦਿਖਦਾ ਹੈ -->
+        <div class="input-result-wrap">
+            <div class="main-input" id="inpBox"></div>
+            <div class="live-result" id="liveBox"><span id="liveText"></span></div>
+        </div>
     </div>
 
     <div class="keypad" id="keypadArea">
@@ -298,110 +325,108 @@
         var activeTokenIndex = null;
         var isOverwriting = false;
 
-        var inpBox, histBox, liveBox, tabsBox;
+        var inpBox, histBox, liveBox, liveText, tabsBox;
 
         window.onload = function() {
-            inpBox = document.getElementById('inpBox');
-            histBox = document.getElementById('histBox');
-            liveBox = document.getElementById('liveBox');
-            tabsBox = document.getElementById('tabsBox');
+            inpBox   = document.getElementById('inpBox');
+            histBox  = document.getElementById('histBox');
+            liveBox  = document.getElementById('liveBox');
+            liveText = document.getElementById('liveText');
+            tabsBox  = document.getElementById('tabsBox');
 
             // ===== ਤੁਰੰਤ ਟੱਚ ਸਿਸਟਮ =====
-            // touchstart ਵਰਤਦੇ ਹਾਂ - onclick ਤੋਂ 300ms ਤੇਜ਼
-            // ਪੂਰੇ keypad ਤੇ ਇੱਕ listener - blank spot ਵੀ ਢੱਕਦਾ ਹੈ
             var keypad = document.getElementById('keypadArea');
-            var pressedBtn = null; // long press ਰੋਕਣ ਲਈ ਟਰੈਕ
+            var pressedBtn = null;
 
             keypad.addEventListener('touchstart', function(e) {
-                e.preventDefault(); // ਡਬਲ-ਟੈਪ zoom ਅਤੇ scroll ਰੋਕੋ
+                e.preventDefault();
                 var touch = e.changedTouches[0];
                 var el = document.elementFromPoint(touch.clientX, touch.clientY);
-                // ਨਜ਼ਦੀਕੀ ਬਟਨ ਲੱਭੋ (ਭਾਵੇਂ SVG ਜਾਂ span ਤੇ ਲੱਗੇ)
                 var btn = el ? el.closest('[data-val],[data-action]') : null;
                 if (!btn) {
-                    // ਖਾਲੀ ਜਗ੍ਹਾ ਲੱਗੀ - ਸਭ ਤੋਂ ਨੇੜੇ ਵਾਲਾ ਬਟਨ ਲੱਭੋ
                     btn = findNearestBtn(touch.clientX, touch.clientY, keypad);
                 }
                 if (btn) {
                     pressedBtn = btn;
                     triggerBtn(btn);
-                    // ਵਿਜ਼ੂਅਲ ਫੀਡਬੈਕ
                     btn.style.background = 'rgba(255,255,255,0.1)';
                 }
             }, { passive: false });
 
             keypad.addEventListener('touchend', function(e) {
-                if (pressedBtn) {
-                    pressedBtn.style.background = '';
-                    pressedBtn = null;
-                }
+                if (pressedBtn) { pressedBtn.style.background = ''; pressedBtn = null; }
             }, { passive: true });
 
             keypad.addEventListener('touchcancel', function(e) {
-                if (pressedBtn) {
-                    pressedBtn.style.background = '';
-                    pressedBtn = null;
-                }
+                if (pressedBtn) { pressedBtn.style.background = ''; pressedBtn = null; }
             }, { passive: true });
 
-            // ਸਭ ਤੋਂ ਨੇੜੇ ਵਾਲਾ ਬਟਨ ਲੱਭਣ ਦਾ ਫੰਕਸ਼ਨ (blank spot ਲਈ)
             function findNearestBtn(x, y, container) {
                 var btns = container.querySelectorAll('[data-val],[data-action]');
-                var nearest = null;
-                var minDist = Infinity;
+                var nearest = null, minDist = Infinity;
                 btns.forEach(function(b) {
                     var rect = b.getBoundingClientRect();
                     var cx = rect.left + rect.width / 2;
                     var cy = rect.top + rect.height / 2;
-                    var dist = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
-                    if (dist < minDist) {
-                        minDist = dist;
-                        nearest = b;
-                    }
+                    var dist = Math.sqrt((x-cx)*(x-cx) + (y-cy)*(y-cy));
+                    if (dist < minDist) { minDist = dist; nearest = b; }
                 });
                 return nearest;
             }
 
-            // ਬਟਨ ਦਾ ਕੰਮ ਚਲਾਓ
             function triggerBtn(btn) {
                 var val = btn.getAttribute('data-val');
                 var action = btn.getAttribute('data-action');
-                if (val !== null) {
-                    window.press(val);
-                } else if (action === 'reset') {
-                    window.masterReset();
-                } else if (action === 'deltab') {
-                    window.delTab();
-                }
+                if (val !== null) window.press(val);
+                else if (action === 'reset') window.masterReset();
+                else if (action === 'deltab') window.delTab();
             }
 
-            // liveBox ਤੇ ਟੱਚ
-            document.getElementById('liveBox').addEventListener('touchstart', function(e) {
+            // ===== ਸਵਾਈਪ: display ਤੇ ਉੱਪਰ/ਥੱਲੇ ਸਵਾਈਪ = keypad ਲੁਕਾਓ/ਦਿਖਾਓ =====
+            var displayArea = document.getElementById('displayArea');
+            var swipeStartY = null;
+            var keypadHidden = false;
+
+            displayArea.addEventListener('touchstart', function(e) {
+                swipeStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            displayArea.addEventListener('touchend', function(e) {
+                if (swipeStartY === null) return;
+                var dy = e.changedTouches[0].clientY - swipeStartY;
+                if (Math.abs(dy) < 30) { swipeStartY = null; return; } // ਛੋਟਾ ਟੱਚ ਅਣਡਿੱਠਾ
+                if (dy > 0 && !keypadHidden) {
+                    // ਹੇਠਾਂ ਸਵਾਈਪ → keypad ਲੁਕਾਓ
+                    keypad.style.display = 'none';
+                    keypadHidden = true;
+                } else if (dy < 0 && keypadHidden) {
+                    // ਉੱਪਰ ਸਵਾਈਪ → keypad ਵਾਪਸ ਲਿਆਓ
+                    keypad.style.display = '';
+                    keypadHidden = false;
+                }
+                swipeStartY = null;
+            }, { passive: true });
+
+            // ===== liveText ਸਿਰਫ਼ ਨੰਬਰ ਤੇ ਕਲਿੱਕ = ਜਵਾਬ =====
+            document.getElementById('liveText').addEventListener('touchstart', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 window.press('=');
             }, { passive: false });
 
-            // histBox ਤੇ ਟੱਚ
-            document.getElementById('histBox').addEventListener('touchstart', function(e) {
+            // ===== histBox ਟੱਚ =====
+            histBox.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 window.restoreHistory();
             }, { passive: false });
 
             try {
-                var sData = localStorage.getItem('calcDataV12');
-                var sId = localStorage.getItem('calcIdV12');
-                if (!sData) {
-                    sData = localStorage.getItem('calcDataV11');
-                    sId = localStorage.getItem('calcIdV11');
-                }
-                if (!sData) {
-                    sData = localStorage.getItem('calcDataV10');
-                    sId = localStorage.getItem('calcIdV10');
-                }
-                if (!sData) {
-                    sData = localStorage.getItem('calcDataVFinal');
-                    sId = localStorage.getItem('calcIdVFinal');
-                }
+                var sData = localStorage.getItem('calcDataV13');
+                var sId = localStorage.getItem('calcIdV13');
+                if (!sData) { sData = localStorage.getItem('calcDataV12'); sId = localStorage.getItem('calcIdV12'); }
+                if (!sData) { sData = localStorage.getItem('calcDataV11'); sId = localStorage.getItem('calcIdV11'); }
+                if (!sData) { sData = localStorage.getItem('calcDataV10'); sId = localStorage.getItem('calcIdV10'); }
+                if (!sData) { sData = localStorage.getItem('calcDataVFinal'); sId = localStorage.getItem('calcIdVFinal'); }
                 if(sData) {
                     calcs = JSON.parse(sData);
                     // ਪੁਰਾਣੇ ਵਰਜਨ ਦੇ ਡਾਟਾ ਵਿੱਚ isResultState ਜੋੜਨ ਲਈ
@@ -435,8 +460,8 @@
 
         function save() {
             try {
-                localStorage.setItem('calcDataV12', JSON.stringify(calcs));
-                localStorage.setItem('calcIdV12', activeId.toString());
+                localStorage.setItem('calcDataV13', JSON.stringify(calcs));
+                localStorage.setItem('calcIdV13', activeId.toString());
             } catch(e) {}
             updateUI();
         }
@@ -571,14 +596,18 @@
                     var res = new Function('return ' + toEval)();
                     if (isFinite(res)) {
                         var roundedRes = Math.round(res * 100000000)/100000000;
-                        liveBox.innerText = "= " + formatNumber(roundedRes);
+                        liveText.innerText = "= " + formatNumber(roundedRes);
                     } else {
-                        liveBox.innerText = "";
+                        liveText.innerText = "";
                     }
                 } else {
-                    liveBox.innerText = "";
+                    liveText.innerText = "";
                 }
-            } catch(e) { liveBox.innerText = ""; }
+            } catch(e) { liveText.innerText = ""; }
+
+            // ਹਿਸਟਰੀ ਸਕਰੋਲ ਹਮੇਸ਼ਾ ਥੱਲੇ ਤੱਕ ਰਹੇ
+            var hw = document.getElementById('histWrap');
+            if (hw) hw.scrollTop = hw.scrollHeight;
             
             // ਨੰਬਰ/ਨਿਸ਼ਾਨ ਡਿਸਏਬਲ (ਮੱਧਮ) ਕਰਨ ਦਾ ਲੌਜਿਕ
             var numBtns = document.querySelectorAll('.c-num');
