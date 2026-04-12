@@ -141,7 +141,7 @@
 
         .num-token, .op-token {
             border-radius: 8px;
-            padding: 0 4px;
+            padding: 0 1px;            /* ਘੱਟ ਜਗ੍ਹਾ - ਨੰਬਰ ਅਤੇ ਨਿਸ਼ਾਨ ਨੇੜੇ ਹੋਣਗੇ */
             white-space: nowrap;
             display: inline-block;
         }
@@ -421,11 +421,10 @@
             }, { passive: false });
 
             try {
-                var sData = localStorage.getItem('calcDataV13');
-                var sId = localStorage.getItem('calcIdV13');
+                var sData = localStorage.getItem('calcDataV14');
+                var sId = localStorage.getItem('calcIdV14');
+                if (!sData) { sData = localStorage.getItem('calcDataV13'); sId = localStorage.getItem('calcIdV13'); }
                 if (!sData) { sData = localStorage.getItem('calcDataV12'); sId = localStorage.getItem('calcIdV12'); }
-                if (!sData) { sData = localStorage.getItem('calcDataV11'); sId = localStorage.getItem('calcIdV11'); }
-                if (!sData) { sData = localStorage.getItem('calcDataV10'); sId = localStorage.getItem('calcIdV10'); }
                 if (!sData) { sData = localStorage.getItem('calcDataVFinal'); sId = localStorage.getItem('calcIdVFinal'); }
                 if(sData) {
                     calcs = JSON.parse(sData);
@@ -460,8 +459,8 @@
 
         function save() {
             try {
-                localStorage.setItem('calcDataV13', JSON.stringify(calcs));
-                localStorage.setItem('calcIdV13', activeId.toString());
+                localStorage.setItem('calcDataV14', JSON.stringify(calcs));
+                localStorage.setItem('calcIdV14', activeId.toString());
             } catch(e) {}
             updateUI();
         }
@@ -563,13 +562,13 @@
                 inpBox.appendChild(span);
             }
 
-            // ਫੋਂਟ ਸਾਈਜ਼: 50,000+50,000+50,000+ (24 ਅੱਖਰ) ਇੱਕ ਲਾਈਨ ਵਿੱਚ ਆਉਣੇ ਚਾਹੀਦੇ ਹਨ
+            // ਫੋਂਟ ਸਾਈਜ਼: ਵੱਡੀ ਕੈਲਕੂਲੇਸ਼ਨ ਲਈ ਵੀ ਮੀਡੀਅਮ ਸਾਈਜ਼ ਰਹੇ
             if (displayStrLength <= 6)       inpBox.style.fontSize = '64px';
             else if (displayStrLength <= 10) inpBox.style.fontSize = '52px';
-            else if (displayStrLength <= 16) inpBox.style.fontSize = '40px';
-            else if (displayStrLength <= 24) inpBox.style.fontSize = '28px';
-            else if (displayStrLength <= 34) inpBox.style.fontSize = '22px';
-            else                             inpBox.style.fontSize = '18px';
+            else if (displayStrLength <= 16) inpBox.style.fontSize = '42px';
+            else if (displayStrLength <= 24) inpBox.style.fontSize = '34px';
+            else if (displayStrLength <= 34) inpBox.style.fontSize = '30px';
+            else                             inpBox.style.fontSize = '26px';
             
             tabsBox.innerHTML = '';
             for(var k=0; k<calcs.length; k++) {
