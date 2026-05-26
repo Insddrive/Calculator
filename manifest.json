@@ -3,7 +3,7 @@
   "name": "ਪ੍ਰੋ ਕੈਲਕੂਲੇਟਰ",
   "short_name": "ਕੈਲਕੂਲੇਟਰ",
   "description": "ਐਡਵਾਂਸਡ ਪੰਜਾਬੀ ਮਲਟੀ-ਟੈਬ ਕੈਲਕੂਲੇਟਰ",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
@@ -12,25 +12,25 @@
   "categories": ["utilities", "productivity"],
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -41,19 +41,19 @@
       "name": "ਨਵਾਂ ਟੈਬ",
       "short_name": "ਨਵਾਂ",
       "description": "ਇੱਕ ਨਵਾਂ ਕੈਲਕੂਲੇਟਰ ਖੋਲ੍ਹੋ",
-      "url": "./index.html?action=newtab"
+      "url": "index.html?action=newtab"
     }
   ],
   "screenshots": [
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "ਕੈਲਕੂਲੇਟਰ ਹੋਮ"
     },
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "wide",
