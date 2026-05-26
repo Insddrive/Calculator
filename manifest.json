@@ -1,4 +1,5 @@
 {
+  "id": "com.insddrive.punjabicalculator",
   "name": "ਪ੍ਰੋ ਕੈਲਕੂਲੇਟਰ",
   "short_name": "ਕੈਲਕੂਲੇਟਰ",
   "description": "ਐਡਵਾਂਸਡ ਪੰਜਾਬੀ ਮਲਟੀ-ਟੈਬ ਕੈਲਕੂਲੇਟਰ",
@@ -14,13 +15,25 @@
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
@@ -29,7 +42,29 @@
       "short_name": "ਨਵਾਂ",
       "description": "ਇੱਕ ਨਵਾਂ ਕੈਲਕੂਲੇਟਰ ਖੋਲ੍ਹੋ",
       "url": "./index.html?action=newtab",
-      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ਕੈਲਕੂਲੇਟਰ ਹੋਮ ਸਕ੍ਰੀਨ"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ਕੈਲਕੂਲੇਟਰ ਹੋਮ ਸਕ੍ਰੀਨ"
     }
   ]
 }
