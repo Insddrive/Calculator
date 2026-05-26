@@ -1,1 +1,9 @@
 
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.insddrive.twa",
+        "sha256_cert_fingerprints": ["57:E4:5B:F8:08:98:34:6D:BF:A4:59:7F:CB:4C:30:89:95:C6:EC:D2:00:E8:AB:EA:26:B7:F1:76:F1:C9:E9:31"]
+      }
+    }]
