@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pa">
 <head>
@@ -6,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ਕੈਲਕੂਲੇਟਰ</title>
     
-    <!-- PWA (ਐਪ ਇੰਸਟਾਲ) ਦੀਆਂ ਸੈਟਿੰਗਜ਼ -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
     <link rel="apple-touch-icon" href="icon-192.png">
 
-    <!-- ਫੁੱਲ ਸਕਰੀਨ ਸੈਟਿੰਗਜ਼ (Status bar black) -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -23,7 +20,6 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
-            /* ਫੋਨ 'ਤੇ ਟੈਕਸਟ ਕਾਪੀ/ਸਲੈਕਟ ਹੋਣ ਤੋਂ ਰੋਕਣ ਲਈ */
             -webkit-user-select: none;
             user-select: none;
         }
@@ -33,7 +29,6 @@
             color: #fff;
             height: 100vh;
             height: 100dvh;
-            /* Safe area - notch ਅਤੇ navigation bar ਤੋਂ ਬਚਾਅ */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             display: flex;
@@ -100,11 +95,10 @@
             display: flex;
             flex-direction: column;
             padding: 10px 20px 5px 20px;
-            overflow: hidden;          /* ਬਾਹਰੀ div ਸਕਰੋਲ ਨਹੀਂ ਕਰੇਗਾ */
+            overflow: hidden;
             position: relative;
         }
 
-        /* ਉੱਪਰਲਾ ਹਿੱਸਾ - ਸਿਰਫ਼ history, ਸਕਰੋਲ ਹੋ ਸਕਦੀ ਹੈ */
         .history-wrap {
             flex: 1;
             overflow-y: auto;
@@ -124,7 +118,6 @@
         }
         .history:active { color: #fff; }
 
-        /* ਮੁੱਖ ਇਨਪੁਟ ਖੇਤਰ - ਸਕਰੋਲ ਨਹੀਂ ਹੁੰਦਾ, ਹਮੇਸ਼ਾ ਦਿਖਦਾ ਹੈ */
         .input-result-wrap {
             flex-shrink: 0;
             padding-top: 4px;
@@ -141,7 +134,7 @@
 
         .num-token, .op-token {
             border-radius: 8px;
-            padding: 0 1px;            /* ਘੱਟ ਜਗ੍ਹਾ - ਨੰਬਰ ਅਤੇ ਨਿਸ਼ਾਨ ਨੇੜੇ ਹੋਣਗੇ */
+            padding: 0 1px;
             white-space: nowrap;
             display: inline-block;
         }
@@ -163,7 +156,6 @@
             min-height: 40px;
             margin-top: 4px;
             font-weight: 400;
-            /* ਸਿਰਫ਼ ਟੈਕਸਟ ਤੇ ਕਲਿੱਕ ਕੰਮ ਕਰੇ, ਖਾਲੀ ਜਗ੍ਹਾ ਤੇ ਨਹੀਂ */
             display: flex;
             justify-content: flex-end;
             align-items: center;
@@ -202,9 +194,9 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: none;          /* ਜ਼ੀਰੋ delay - ਤੁਰੰਤ ਰਿਸਪੌਂਸ */
+            transition: none;
             -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation; /* ਡਬਲ-ਟੈਪ zoom ਬੰਦ, delay ਹਟਾਉ */
+            touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -214,7 +206,6 @@
         .btn-op { color: #F07041; font-size: 38px; }
         .btn-ac { font-size: 24px; color: #F07041; }
         
-        /* ਡਿਸਏਬਲ (ਮੱਧਮ) ਕਰਨ ਲਈ ਕਲਾਸ */
         .btn.disabled {
             opacity: 0.25;
             pointer-events: none;
@@ -257,11 +248,9 @@
     </div>
 
     <div class="display" id="displayArea">
-        <!-- ਹਿਸਟਰੀ - ਸਕਰੋਲ ਹੋ ਸਕਦੀ ਹੈ -->
         <div class="history-wrap" id="histWrap">
             <div class="history" id="histBox"></div>
         </div>
-        <!-- ਮੁੱਖ ਇਨਪੁਟ + ਜਵਾਬ - ਹਮੇਸ਼ਾ ਥੱਲੇ ਦਿਖਦਾ ਹੈ -->
         <div class="input-result-wrap">
             <div class="main-input" id="inpBox"></div>
             <div class="live-result" id="liveBox"><span id="liveText"></span></div>
@@ -309,7 +298,6 @@
     </div>
 
     <script>
-        // ਸਰਵਿਸ ਵਰਕਰ
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', function() {
             navigator.serviceWorker.register('sw.js').then(function(registration) {
@@ -318,8 +306,6 @@
           });
         }
 
-        // ਡਾਟਾ ਸਟੋਰੇਜ
-        // isResultState: ਇਹ ਦੱਸੇਗਾ ਕਿ ਸਕਰੀਨ 'ਤੇ ਜਵਾਬ ਹੈ ਜਾਂ ਨਹੀਂ
         var calcs = [{ id: 1, expr: '0', hist: '', isResultState: false }];
         var activeId = 1;
         var activeTokenIndex = null;
@@ -334,7 +320,6 @@
             liveText = document.getElementById('liveText');
             tabsBox  = document.getElementById('tabsBox');
 
-            // ===== ਤੁਰੰਤ ਟੱਚ ਸਿਸਟਮ =====
             var keypad = document.getElementById('keypadArea');
             var pressedBtn = null;
 
@@ -382,7 +367,6 @@
                 else if (action === 'deltab') window.delTab();
             }
 
-            // ===== ਸਵਾਈਪ: display ਤੇ ਉੱਪਰ/ਥੱਲੇ ਸਵਾਈਪ = keypad ਲੁਕਾਓ/ਦਿਖਾਓ =====
             var displayArea = document.getElementById('displayArea');
             var swipeStartY = null;
             var keypadHidden = false;
@@ -394,27 +378,23 @@
             displayArea.addEventListener('touchend', function(e) {
                 if (swipeStartY === null) return;
                 var dy = e.changedTouches[0].clientY - swipeStartY;
-                if (Math.abs(dy) < 30) { swipeStartY = null; return; } // ਛੋਟਾ ਟੱਚ ਅਣਡਿੱਠਾ
+                if (Math.abs(dy) < 30) { swipeStartY = null; return; }
                 if (dy > 0 && !keypadHidden) {
-                    // ਹੇਠਾਂ ਸਵਾਈਪ → keypad ਲੁਕਾਓ
                     keypad.style.display = 'none';
                     keypadHidden = true;
                 } else if (dy < 0 && keypadHidden) {
-                    // ਉੱਪਰ ਸਵਾਈਪ → keypad ਵਾਪਸ ਲਿਆਓ
                     keypad.style.display = '';
                     keypadHidden = false;
                 }
                 swipeStartY = null;
             }, { passive: true });
 
-            // ===== liveText ਸਿਰਫ਼ ਨੰਬਰ ਤੇ ਕਲਿੱਕ = ਜਵਾਬ =====
             document.getElementById('liveText').addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 window.press('=');
             }, { passive: false });
 
-            // ===== histBox ਟੱਚ =====
             histBox.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 window.restoreHistory();
@@ -428,7 +408,6 @@
                 if (!sData) { sData = localStorage.getItem('calcDataVFinal'); sId = localStorage.getItem('calcIdVFinal'); }
                 if(sData) {
                     calcs = JSON.parse(sData);
-                    // ਪੁਰਾਣੇ ਵਰਜਨ ਦੇ ਡਾਟਾ ਵਿੱਚ isResultState ਜੋੜਨ ਲਈ
                     for(var i=0; i<calcs.length; i++) {
                         if (calcs[i].isResultState === undefined) {
                             calcs[i].isResultState = false;
@@ -453,6 +432,12 @@
                     updateUI();
                 }
             };
+
+            // ਸ਼ਾਰਟਕੱਟ ਐਕਸ਼ਨ ਚੈੱਕ ਕਰਨ ਲਈ ਲੌਜਿਕ
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'newtab') {
+                setTimeout(function() { window.addCalc(); }, 300);
+            }
 
             updateUI();
         };
@@ -485,7 +470,6 @@
             return parts.join(".");
         }
 
-        // ਹਿਸਟਰੀ ਨੂੰ ਵਾਪਸ ਲਿਆਉਣ ਦਾ ਲੌਜਿਕ
         window.restoreHistory = function() {
             var act = null;
             for(var i=0; i<calcs.length; i++) {
@@ -501,7 +485,7 @@
 
             act.expr = histStr.replace(/,/g, ''); 
             act.hist = '';
-            act.isResultState = false; // ਹਿਸਟਰੀ ਵਾਪਸ ਲਿਆਉਣ 'ਤੇ ਇਸਨੂੰ ਐਡਿਟੇਬਲ ਬਣਾਓ
+            act.isResultState = false;
             activeTokenIndex = null;
             save();
         };
@@ -562,7 +546,6 @@
                 inpBox.appendChild(span);
             }
 
-            // ਫੋਂਟ ਸਾਈਜ਼: ਵੱਡੀ ਕੈਲਕੂਲੇਸ਼ਨ ਲਈ ਵੀ ਮੀਡੀਅਮ ਸਾਈਜ਼ ਰਹੇ
             if (displayStrLength <= 6)       inpBox.style.fontSize = '64px';
             else if (displayStrLength <= 10) inpBox.style.fontSize = '52px';
             else if (displayStrLength <= 16) inpBox.style.fontSize = '42px';
@@ -604,11 +587,9 @@
                 }
             } catch(e) { liveText.innerText = ""; }
 
-            // ਹਿਸਟਰੀ ਸਕਰੋਲ ਹਮੇਸ਼ਾ ਥੱਲੇ ਤੱਕ ਰਹੇ
             var hw = document.getElementById('histWrap');
             if (hw) hw.scrollTop = hw.scrollHeight;
             
-            // ਨੰਬਰ/ਨਿਸ਼ਾਨ ਡਿਸਏਬਲ (ਮੱਧਮ) ਕਰਨ ਦਾ ਲੌਜਿਕ
             var numBtns = document.querySelectorAll('.c-num');
             var opBtns = document.querySelectorAll('.c-op');
             
@@ -626,7 +607,6 @@
                 }
             }
 
-            // ਟਿੱਕ ਮਾਰਕ ਬਟਨ
             var eqBtn = document.getElementById('eqBtn');
             if (eqBtn) {
                 if (activeTokenIndex !== null) {
@@ -698,11 +678,9 @@
                 if (activeTokenIndex !== null) {
                     var edited = tokens[activeTokenIndex];
                     if (/[0-9.]/.test(edited)) {
-                        // ਸਲੈਕਟਡ ਨੰਬਰ ਨੂੰ ਇੱਕੋ ਵਾਰ ਸਾਰਾ ਕੱਟੋ → '0' ਕਰੋ, ਸਲੈਕਟਡ ਰਹੇ
                         tokens[activeTokenIndex] = '0';
-                        isOverwriting = true; // ਨਵਾਂ ਨੰਬਰ ਟਾਈਪ ਕਰਨ ਲਈ ਤਿਆਰ
+                        isOverwriting = true; 
                     } else {
-                        // ਆਪਰੇਟਰ ਟੋਕਨ ਸੀ - ਉਸਨੂੰ ਹਟਾਓ
                         tokens.splice(activeTokenIndex, 1);
                         if(tokens.length === 0) tokens.push('0');
                         activeTokenIndex = null; 
@@ -744,7 +722,7 @@
                         }
                         act.hist = formattedEx + " =";
                         act.expr = String(Math.round(res * 100000000)/100000000);
-                        act.isResultState = true; // ਇਹ ਫਲੈਗ ਦੱਸਦਾ ਹੈ ਕਿ ਹੁਣ ਸਕਰੀਨ 'ਤੇ ਜਵਾਬ ਹੈ
+                        act.isResultState = true; 
                     }
                 } catch(e) {
                     act.expr = 'Error';
@@ -777,7 +755,6 @@
                 act.isResultState = false;
             }
             else if (ops.indexOf(val) !== -1) {
-                // ਜੇਕਰ ਕੋਈ ਨਿਸ਼ਾਨ ਦਬਾਇਆ ਗਿਆ ਹੈ
                 if (activeTokenIndex !== null && ops.indexOf(tokens[activeTokenIndex]) !== -1) {
                     tokens[activeTokenIndex] = val;
                     act.expr = tokens.join('');
@@ -791,11 +768,9 @@
                         act.expr += val;
                     }
                 }
-                // ਨਿਸ਼ਾਨ ਦਬਾਉਣ 'ਤੇ ਜਵਾਬ ਵਾਲੀ ਸਟੇਟ ਖਤਮ ਹੋ ਜਾਂਦੀ ਹੈ (ਭਾਵ ਹੁਣ ਹੋਰ ਕੈਲਕੂਲੇਸ਼ਨ ਹੋਵੇਗੀ)
                 act.isResultState = false;
             }
             else {
-                // ਜੇਕਰ ਕੋਈ ਨੰਬਰ (ਜਾਂ ਬਿੰਦੂ) ਦਬਾਇਆ ਗਿਆ ਹੈ
                 if (activeTokenIndex !== null) {
                     if (ops.indexOf(tokens[activeTokenIndex]) !== -1) {
                         activeTokenIndex = null;
@@ -821,18 +796,16 @@
                     }
                     act.isResultState = false;
                 } else {
-                    // ਨਵਾਂ ਲੌਜਿਕ: ਜੇਕਰ ਸਕਰੀਨ 'ਤੇ ਜਵਾਬ ਹੈ ਅਤੇ ਅਸੀਂ ਨਵਾਂ ਨੰਬਰ ਦਬਾਇਆ ਹੈ
                     if (act.isResultState) {
                         if (val === '.') {
                             act.expr = '0.';
                         } else {
-                            act.expr = val; // ਪੁਰਾਣਾ ਜਵਾਬ ਮਿਟਾ ਕੇ ਨਵਾਂ ਨੰਬਰ ਲਿਖੋ
+                            act.expr = val; 
                         }
-                        act.hist = ''; // ਹਿਸਟਰੀ ਵੀ ਮਿਟਾ ਦਿਓ (ਨਵੀਂ ਕੈਲਕੂਲੇਸ਼ਨ ਸ਼ੁਰੂ)
+                        act.hist = ''; 
                         act.isResultState = false;
                     } 
                     else {
-                        // ਆਮ ਹਾਲਤ: ਨੰਬਰ ਪਿੱਛੇ ਜੋੜਦੇ ਜਾਓ
                         if (val === '.') {
                             var lastToken = tokens[tokens.length - 1] || '0';
                             if (ops.indexOf(lastToken) !== -1) {
@@ -849,9 +822,6 @@
             }
             save();
         };
-
     </script>
 </body>
 </html>
-
-
